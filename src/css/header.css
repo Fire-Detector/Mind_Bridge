@@ -7,33 +7,14 @@ html, body, #root {
   box-sizing: border-box;
 }
 
-/* header 전체 스타일 */
-.header {
-  width: 100%; /* 추가 */
-  max-width: 100vw; /* 추가 */
-  background-color: #729CDA;
-  color: white;
-  padding: 1rem 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
-  box-sizing: border-box; /* 패딩 포함 */
-  position: relative; /* .translate 기준 anchor */
-}
-
-/* 로고 + 텍스트 wrapper */
-.header-inner {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
 /* 로고 이미지 */
+
 .logo {
-  width: 260px;
-  height: auto;
-  object-fit: contain;
+  width: 200px;
+  height: 150px;
+  margin: 0px;
+  position: absolute;
+  top: -40px;
 }
 
 /* 번역 버튼 위치 */

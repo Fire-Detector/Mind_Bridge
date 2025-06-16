@@ -2,11 +2,17 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #3a5b88;
+  background-color: #4a6fa5;
   padding: 1rem 2rem;
   position: sticky;
   top: 0;
   z-index: 1000;
+}
+/*창이 줄어들때 글이 없어짐*/
+@media (max-width: 768px) {
+  .nav-link {
+    display: none;
+  }
 }
 
 .nav-links {

@@ -84,16 +84,14 @@ const App = () => {
   return (
     <div>
       <header className="header">
-        <div className="header-inner">
-          <img src="/로고.png" alt="Mind Bridge 로고" className="logo" onClick={() => showSection('about')} style={{ cursor: 'pointer' }} />
-        </div>
         <div id="google_translate_element" className="translate"></div>
       </header>
 
       <nav className="nav">
-        <div className="nav-left"></div>
+        <div className="nav-left">
+        <img src="/로고2.png" alt="Mind Bridge 로고" className="logo" onClick={() => showSection('about')} style={{ cursor: 'pointer' }} /></div>
         <div className="nav-center">
-          {['about', 'services', 'board'].map((sec) => (
+          {['about', 'services', 'board', "self"].map((sec) => (
             <div
               key={sec}
               className="nav-item-wrapper"
@@ -302,7 +300,8 @@ const sectionLabels = {
   signup: '회원가입',
   id: '아이디 찾기',
   password: '비밀번호 찾기',
-  faq: '자주 묻는 질문'
+  faq: '자주 묻는 질문',
+  self: '자가진단'
 };
 
 const formInputs = {
