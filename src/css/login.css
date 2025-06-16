@@ -1,0 +1,48 @@
+/* ✅ 6. 인증(로그인/회원가입) 버튼 */
+.auth-button {
+  background-color: white;
+  color: #3a5b88;
+  border: none;
+  padding: 0.5rem 1.2rem;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.auth-button-hover {
+  background-color: #e0e0e0;
+}
+
+/* ✅ 9. 폼 입력 섹션 (로그인, 회원가입 등) */
+.form-section {
+  padding: 2rem;
+  background: white;
+  margin: 2rem auto;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  max-width: 350px;
+  text-align: center;
+}
+
+.input {
+  padding: 0.4rem;
+  margin: 0.3rem 0;
+  width: 65%;
+  font-size: 0.9rem;
+}
+
+.button {
+  padding: 0.4rem;
+  margin: 0.3rem 0;
+  width: 60%;
+  font-size: 0.9rem;
+}
+
+.form-links {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+}
+
