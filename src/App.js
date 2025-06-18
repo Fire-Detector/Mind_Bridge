@@ -1,5 +1,4 @@
-// App.jsx
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import '../src/css/App.css';
 import '../src/css/board.css';
 import '../src/css/chat.css';
@@ -18,12 +17,31 @@ const App = () => {
   const [isAdmin] = useState(false);
   const [hoveredMenu, setHoveredMenu] = useState(null);
   const [subMenuVisible, setSubMenuVisible] = useState(null);
+  const [visibility, setVisibility] = useState(null);
+  const [signupState, setSignupState] = useState('');
+  const [selfAnswers, setSelfAnswers] = useState(Array(20).fill(''));
+
 
   const chatHistory = [
     { summary: '1차 상담 내용' },
     { summary: '2차 상담 내용' },
     { summary: '3차 상담 내용' }
   ];
+
+  const handleScrollToTop = () => {
+    const root = document.getElementById('root');
+    if (root) {
+      root.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  const handleSelfAnswer = (index, value) => {
+    const updated = [...selfAnswers];
+    updated[index] = value;
+    setSelfAnswers(updated);
+  };
 
   const faqList = [
     { q: 'Q. AI 상담이 실제 사람처럼 이야기하나요?', a: 'A. Mind Bridge는 자연어 이해와 공감 대화를 기반으로 상담 서비스를 제공드리기 위해 노력하고 있습니다' },
@@ -32,9 +50,15 @@ const App = () => {
   ];
 
   const leaveTimer = useRef(null);
-  const locationRef = useRef(null);
   const introRef = useRef(null);
   const noticeRef = useRef(null);
+  const locationRef = useRef(null);
+
+  const scrollToSection = (ref) => {
+    if (ref?.current) {
+      ref.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   const handleMouseEnter = (menu) => {
     clearTimeout(leaveTimer.current);
@@ -89,22 +113,34 @@ const App = () => {
 
       <nav className="nav">
         <div className="nav-left">
-        <img src="/로고2.png" alt="Mind Bridge 로고" className="logo" onClick={() => showSection('about')} style={{ cursor: 'pointer' }} /></div>
+          <img src="/로고2.png" alt="Mind Bridge 로고" className="logo" onClick={() => showSection('about')} style={{ cursor: 'pointer' }} />
+        </div>
         <div className="nav-center">
-          {['about', 'services', 'board', "self"].map((sec) => (
+          {['about', 'services', 'board', 'self'].map((sec) => (
             <div
               key={sec}
               className="nav-item-wrapper"
-              onMouseEnter={() => (sec === 'services' || sec === 'board') && handleMouseEnter(sec)}
+              onMouseEnter={() => ['services', 'board', 'about'].includes(sec) && handleMouseEnter(sec)}
               onMouseLeave={handleMouseLeaveAll}
             >
               <a
                 href="#"
-                onClick={() => (sec !== 'services' && sec !== 'board') && showSection(sec)}
+                onClick={() => !['services', 'board', 'about'].includes(sec) && showSection(sec)}
                 className={`nav-link ${activeSection === sec && sec !== 'about' ? 'nav-link-hover' : ''}`}
               >
                 {sectionLabels[sec]}
               </a>
+              {sec === 'about' && hoveredMenu === 'about' && (
+                <div className="dropdown-wrapper">
+                  <div className="dropdown">
+                    <div className="dropdown-column">
+                      <div className="dropdown-item" onClick={() => scrollToSection(introRef)}>회사 소개</div>
+                      <div className="dropdown-item" onClick={() => scrollToSection(noticeRef)}>회사 공지</div>
+                      <div className="dropdown-item" onClick={() => scrollToSection(locationRef)}>회사 위치</div>
+                    </div>
+                  </div>
+                </div>
+              )}
               {sec === 'services' && hoveredMenu === 'services' && (
                 <div className="dropdown-wrapper">
                   <div className="dropdown">
@@ -157,12 +193,43 @@ const App = () => {
         </div>
       </nav>
 
+      <div className="floating-sidebar">
+        <div className="floating-button">?</div>
+        <div className="floating-button">?</div>
+        <div className="floating-button top" onClick={handleScrollToTop}>TOP</div>
+      </div>
+
       {activeSection === 'about' && (
-        <section className="hero">
-          <h1><strong>당신의 마음을 이해하는</strong> AI Mind Bridge</h1>
-          <p>감성 분석, AI 상담, 번역, 이미지 기반 소통까지 한 번에</p>
-          <a href="#faq" className="cta" onClick={() => showSection('faq')}>자주 묻는 질문</a>
-        </section>
+        <>
+          <section className="hero">
+            <h1><strong>당신의 마음을 이해하는</strong> AI Mind Bridge</h1>
+            <p>감성 분석, AI 상담, 번역, 이미지 기반 소통까지 한 번에</p>
+            <a href="#faq" className="cta" onClick={() => showSection('faq')}>자주 묻는 질문</a>
+          </section>
+
+          <section ref={introRef} className="section">
+            <h2>회사 소개</h2>
+            <p>Mind Bridge는 인공지능 기반 정서 분석 및 상담 서비스를 제공합니다.</p>
+          </section>
+
+          <section ref={noticeRef} className="section">
+            <h2>공지 사항</h2>
+            <p>현재 정기 점검 중이며, 서비스가 일부 제한될 수 있습니다.</p>
+          </section>
+
+          <section ref={locationRef} className="section">
+            <h2>회사 위치</h2>
+            <div className="map-container">
+              <iframe
+                src="https://map.naver.com/p/search/%EC%86%94%EB%8D%B0%EC%8A%A4%ED%81%AC?c=15.00,0,0,0,dh"
+                allowFullScreen
+                className="map-iframe"
+                title="회사 위치"
+              />
+              <p className="map-caption">📍 서울특별시 종로구 종로12길 15 코아빌딩 2층, 5층, 8층, 9층, 10층</p>
+            </div>
+          </section>
+        </>
       )}
 
       {activeSection === 'faq' && (
@@ -174,7 +241,39 @@ const App = () => {
         </section>
       )}
 
-      {['login', 'signup', 'id', 'password'].includes(activeSection) && (
+      {activeSection === 'signup' && (
+        <section className="form-section form-section-flex">
+          <div className="form-left">
+            <h2>{sectionLabels.signup}</h2>
+            {formInputs.signup.map((input, i) => (
+              <input key={i} type={input.type} placeholder={input.placeholder} className="input" />
+            ))}
+            <button className="button">{buttonLabels.signup}</button>
+          </div>
+
+          <div className="form-right">
+            <h3>내가 생각하는 나의 현재 상태</h3>
+            <ul className="radio-list">
+              {['우울증', '불안장애', 'ADHD', '게임중독', '반항장애'].map((label, i) => (
+                <li key={i}>
+                  <label>
+                    <input
+                      type="radio"
+                      name="mentalState"
+                      value={label}
+                      checked={signupState === label}
+                      onChange={(e) => setSignupState(e.target.value)}
+                    />
+                    {label}
+                  </label>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )}
+
+      {['login', 'id', 'password'].includes(activeSection) && (
         <section className="form-section">
           <h2>{sectionLabels[activeSection]}</h2>
           {formInputs[activeSection].map((input, i) => (
@@ -207,7 +306,16 @@ const App = () => {
               <textarea className="textarea" placeholder="당신의 감정을 나눠보세요..."></textarea>
               <div>
                 {['공개', '비공개', '관리자만 공개'].map((label, i) => (
-                  <label key={i}><input type="checkbox" /> {label}</label>
+                  <label key={i}>
+                    <input
+                      type="radio"
+                      name="visibility"
+                      value={label}
+                      checked={visibility === label}
+                      onChange={(e) => setVisibility(e.target.value)}
+                    />
+                    {label}
+                  </label>
                 ))}
               </div>
             </>
@@ -226,6 +334,62 @@ const App = () => {
           )}
         </section>
       )}
+
+      {activeSection === 'self' && (
+        <section className="form-section">
+          <h2>우울 자가진단 테스트 (CES-D)</h2>
+          <p>지난 1주일 동안의 느낌과 행동을 잘 보고 해당하는 항목을 선택해주세요.</p>
+
+          <ul className="self-test-list">
+            {[
+              '평소보다 식욕이 없었다',
+              '평소보다 우울했다',
+              '무슨 일을 해도 기운이 없었다',
+              '평소보다 말수가 줄었다',
+              '가족이나 친구에게 짜증을 냈다',
+              '사는 게 허무하게 느껴졌다',
+              '자주 울었다',
+              '밤에 잠을 이루기 어려웠다',
+              '자주 피곤함을 느꼈다',
+              '다른 사람들과 이야기하기 싫었다',
+              '어떤 일에도 집중이 잘 안 되었다',
+              '자신이 실패자 같았다',
+              '다른 사람이 자신을 싫어한다고 느꼈다',
+              '일상에 만족하지 못했다',
+              '희망을 느끼지 못했다',
+              '모든 것이 귀찮게 느껴졌다',
+              '혼자 있고 싶었다',
+              '사람들이 나를 싫어하는 것 같았다',
+              '나 자신을 가치 없게 느꼈다',
+              '앞으로 더 나빠질 것 같았다'
+            ].map((question, index) => (
+              <li key={index} className="self-test-item">
+                <p>{index + 1}. {question}</p>
+                <div className="self-option-group">
+                  {['거의 없다', '가끔 있다', '자주 있다', '항상 있다'].map((option, i) => (
+                    <label key={i} className="self-option">
+                      <input
+                        type="radio"
+                        name={`q${index}`}
+                        value={option}
+                        checked={selfAnswers[index] === option}
+                        onChange={() => handleSelfAnswer(index, option)}
+                      />
+                      {option}
+                    </label>
+                  ))}
+                </div>
+              </li>
+            ))}
+          </ul>
+
+          <div style={{ marginTop: '1.5rem' }}>
+            <button className="button" onClick={() => alert('제출 완료')}>제출</button>
+            <button className="button" onClick={() => setSelfAnswers(Array(20).fill(''))}>다시하기</button>
+          </div>
+        </section>
+      )}
+
 
       {activeSection === 'email' && (
         <section className="board-section">
@@ -253,36 +417,9 @@ const App = () => {
         </section>
       )}
 
-      {activeSection === 'about' && (
-        <>
-          <section ref={introRef} className="section">
-            <h2>회사 소개</h2>
-            <p>Mind Bridge는 인공지능 기반 정서 분석 및 상담 서비스를 제공합니다.</p>
-          </section>
-
-          <section ref={noticeRef} className="section">
-            <h2>공지 사항</h2>
-            <p>현재 정기 점검 중이며, 서비스가 일부 제한될 수 있습니다.</p>
-          </section>
-
-          <section ref={locationRef} className="section">
-            <h2>회사 위치</h2>
-            <div className="map-container">
-              <iframe
-                src="https://map.naver.com/p/search/%EC%84%9C%EC%9A%B8%20%EC%A4%91%EA%B5%AC%20%ED%86%B5%EC%9D%BC%EB%A1%9C%20114"
-                allowFullScreen
-                className="map-iframe"
-                title="회사 위치"
-              />
-              <p className="map-caption">📍 서울시 중구 통일로 114</p>
-            </div>
-          </section>
-        </>
-      )}
-
       <footer className="footer">
-        주식회사 : (주) 화재감지기 | 주소 : 서울시 중구 통일로 114<br />
-        이메일 : help@mindbridge.ai | 전화: 02-1234-5678
+        <strong>주식회사 : (주) 화재감지기 | 주소 : 서울특별시 종로구 종로12길 15 코아빌딩<br />
+        이메일 : help@mindbridge.ai | 전화: 02-1234-5678</strong>
         <img src="/문의.jpg" className="small-img" />
       </footer>
     </div>

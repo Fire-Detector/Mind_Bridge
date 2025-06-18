@@ -8,7 +8,7 @@
   top: 0;
   z-index: 1000;
 }
-/*창이 줄어들때 글이 없어짐*/
+
 @media (max-width: 768px) {
   .nav-link {
     display: none;
