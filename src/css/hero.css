@@ -3,9 +3,13 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  list-style-type: none;
+  padding-left: 0;
 }
 
-html, body, #root {
+html,
+body,
+#root {
   width: 100%;
   height: 100%;
   overflow-x: hidden;
@@ -17,7 +21,8 @@ html, body, #root {
 body {
   display: flex;
   flex-direction: column;
-  align-items: center; /* 중앙 정렬 */
+  align-items: center;
+  /* 중앙 정렬 */
 }
 
 /* Hero 영역을 정확히 뷰포트에 맞춤 */
@@ -57,7 +62,7 @@ body {
 /* CTA 버튼 */
 .cta {
   display: inline-block;
-  background-color: #4a6fa5;
+  background-color: #000000;
   color: white;
   padding: 0.75rem 1.5rem;
   border-radius: 4px;
